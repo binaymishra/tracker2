@@ -129,6 +129,7 @@ public class TrackerRepository {
 	}
 
 	public List<TableA> fetchAllFromTableA() {
+		long startTime = System.currentTimeMillis();
 		List<TableA> tableA = Collections.emptyList();
 		try {
 			tableA =  template.query(selectFromTableA, new RowMapper<TableA>() {
@@ -148,11 +149,12 @@ public class TrackerRepository {
 		} catch (DataAccessException e) {
 			ReflectionUtils.rethrowRuntimeException(e);
 		}
-		System.out.println(String.format("%s . record found = %d", selectFromTableA, tableA.size()));
+		System.out.println(String.format("%s . record found = %d. Time elapsed = %d ms.", selectFromTableA, tableA.size(), (System.currentTimeMillis() - startTime)));
 		return tableA;
 	}
 
 	public List<TableB> fetchAllFromTableB() {
+		long startTime = System.currentTimeMillis();
 		List<TableB> tableB = Collections.emptyList();
 		try {
 			tableB =  template.query(selectFromTableB, new RowMapper<TableB>() {
@@ -172,11 +174,12 @@ public class TrackerRepository {
 		} catch (DataAccessException e) {
 			ReflectionUtils.rethrowRuntimeException(e);
 		}
-		System.out.println(String.format("%s . record found = %d", selectFromTableB, tableB.size()));
+		System.out.println(String.format("%s . record found = %d. Time elapsed = %d ms.", selectFromTableB, tableB.size(), (System.currentTimeMillis() - startTime)));
 		return tableB;
 	}
 
 	public List<TableC> fetchAllFromTableC() {
+		long startTime = System.currentTimeMillis();
 		List<TableC> tableC = Collections.emptyList();
 
 		try {
@@ -196,7 +199,7 @@ public class TrackerRepository {
 		} catch (DataAccessException e) {
 			ReflectionUtils.rethrowRuntimeException(e);
 		}
-		System.out.println(String.format("%s . record found = %d", selectFromTableC, tableC.size()));
+		System.out.println(String.format("%s . record found = %d. Time elapsed = %d ms.", selectFromTableC, tableC.size(), (System.currentTimeMillis() - startTime)));
 		return tableC;
 	}
 

@@ -11,5 +11,9 @@ public interface TrackerService {
 	List<Map<String, Long>> findUserIpAnIntervalForTableA(long minutes);
 	
 	void userSessionsTableA(int startHour, int endHour);
+	
+	void locationTableA();
+	
+	void locationTableB();
 
 }

@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tracker2.domain.TableA;
+import tracker2.domain.TableB;
+import tracker2.domain.TableC;
 
 @Service
 public class TrackerServiceImpl implements TrackerService{
@@ -22,6 +24,10 @@ public class TrackerServiceImpl implements TrackerService{
 	private TrackerRepository trackerRepository;
 	
 	private List<TableA> tableAList;
+	
+	private List<TableB> tableBList;
+	
+	private List<TableC> tableCList;
 	
 	@Autowired
 	public TrackerServiceImpl(final TrackerRepository trackerRepository) {
@@ -35,6 +41,8 @@ public class TrackerServiceImpl implements TrackerService{
 		trackerRepository.insertTableC();
 		
 		tableAList = trackerRepository.fetchAllFromTableA();
+		tableBList = trackerRepository.fetchAllFromTableB();
+		tableCList = trackerRepository.fetchAllFromTableC();
 	}
 
 	@Override
@@ -121,6 +129,66 @@ public class TrackerServiceImpl implements TrackerService{
 			}if(highestDuration.equals(valLong)){
 				System.out.println(String.format("[%-20s ] userIp has highest session = %d sec", key, valLong));
 			}
+		}
+	}
+
+	@Override
+	public void locationTableA() {
+		Map<TableC, List<TableA>> mapOfTableAs = new HashMap<TableC, List<TableA>>();
+		for(TableC c: tableCList){
+			for(TableA a : tableAList){
+				if(a.getApName().contains(c.getPrefix())){
+					List<TableA> values = mapOfTableAs.get(c);
+					if(values == null || values.isEmpty()){
+						List<TableA> val = new ArrayList<TableA>();
+						val.add(a);
+						mapOfTableAs.put(c, val);
+					}else{
+						values.add(a);
+						mapOfTableAs.put(c, values);
+					}
+				}
+			}
+		}
+		
+		
+		for(Map.Entry<TableC, List<TableA>> entry: mapOfTableAs.entrySet()){
+			TableC key = entry.getKey();
+			List<TableA> values = entry.getValue();
+			
+			System.out.println(key.getPrefix() +" : "+values.size());
+			
+			
+		}
+	}
+
+	@Override
+	public void locationTableB() {
+		Map<TableC, List<TableB>> mapOfTableAs = new HashMap<TableC, List<TableB>>();
+		for(TableC c: tableCList){
+			for(TableB b : tableBList){
+				if(b.getApName().contains(c.getPrefix())){
+					List<TableB> values = mapOfTableAs.get(c);
+					if(values == null || values.isEmpty()){
+						List<TableB> val = new ArrayList<TableB>();
+						val.add(b);
+						mapOfTableAs.put(c, val);
+					}else{
+						values.add(b);
+						mapOfTableAs.put(c, values);
+					}
+				}
+			}
+		}
+		
+		
+		for(Map.Entry<TableC, List<TableB>> entry: mapOfTableAs.entrySet()){
+			TableC key = entry.getKey();
+			List<TableB> values = entry.getValue();
+			
+			System.out.println(key.getPrefix() +" : "+values.size());
+			
+			
 		}
 	}
 
