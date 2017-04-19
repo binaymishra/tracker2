@@ -8,22 +8,5 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
 
 	<context:annotation-config />
-	<tx:annotation-driven transaction-manager="txManager" />
 	<context:component-scan base-package="tracker2" />
-
-	<jdbc:embedded-database type="HSQL" id="dataSource">
-		<jdbc:script location="classpath:schema.sql" />
-	</jdbc:embedded-database>
-
-	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-        <property name="driverClass" value="org.h2.Driver"/>
-        <property name="url" value="jdbc:h2:tcp://localhost/~/tracker;DB_CLOSE_DELAY=- 1;DB_CLOSE_ON_EXIT=FALSE"/>
-        <property name="username" value="sa"/>
-        <property name="password" value=""/>
-    </bean> -->
-
-	<bean id="txManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
 </beans>

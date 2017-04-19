@@ -21,7 +21,8 @@ import tracker2.domain.TableC;
 @Service
 public class TrackerServiceImpl implements TrackerService{
 	
-	private TrackerRepository trackerRepository;
+	
+	private TrackerComponent trackerComponent;
 	
 	private List<TableA> tableAList;
 	
@@ -30,19 +31,16 @@ public class TrackerServiceImpl implements TrackerService{
 	private List<TableC> tableCList;
 	
 	@Autowired
-	public TrackerServiceImpl(final TrackerRepository trackerRepository) {
-		this.trackerRepository = trackerRepository;
+	public TrackerServiceImpl(final TrackerComponent trackerComponent) {
+		this.trackerComponent = trackerComponent;
 	}
 	
 	@PostConstruct
 	public void init() throws IOException{
-		trackerRepository.insertTableA();
-		trackerRepository.insertTableB();
-		trackerRepository.insertTableC();
 		
-		tableAList = trackerRepository.fetchAllFromTableA();
-		tableBList = trackerRepository.fetchAllFromTableB();
-		tableCList = trackerRepository.fetchAllFromTableC();
+		tableAList = trackerComponent.readFileTableA20120407();
+		tableBList = trackerComponent.readFileTableB20120409();
+		tableCList = trackerComponent.readFileTableC();
 	}
 
 	@Override
