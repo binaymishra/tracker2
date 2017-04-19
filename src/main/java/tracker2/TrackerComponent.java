@@ -32,6 +32,7 @@ public class TrackerComponent {
 	 * @throws IOException
 	 */
 	public List<TableA> readFileTableA20120407() throws IOException{
+		long startTime = System.currentTimeMillis();
 		File file = resourceLoader.getResource("classpath:TableA20120407.csv").getFile();
 		List<TableA> tableA = new ArrayList<TableA>();
 		BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -48,6 +49,7 @@ public class TrackerComponent {
 			System.err.println(e.toString());
 		}finally{
 			reader.close();
+			System.out.println(String.format("'TableA20120407.csv' file read successfully completed ! time elapsed = %d ms and number of record created = %d", (System.currentTimeMillis() - startTime), tableA.size()));
 		}
 		return tableA;
 	}
@@ -57,6 +59,7 @@ public class TrackerComponent {
 	 * @throws IOException
 	 */
 	public List<TableB> readFileTableB20120409() throws IOException{
+		long startTime = System.currentTimeMillis();
 		File file = resourceLoader.getResource("classpath:TableB20120409.csv").getFile();
 		List<TableB> tableB = new ArrayList<TableB>();
 		BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -73,6 +76,7 @@ public class TrackerComponent {
 			System.err.println(e.toString());
 		}finally{
 			reader.close();
+			System.out.println(String.format("'TableB20120409.csv' file read successfully completed ! time elapsed = %d ms and number of record created = %d", (System.currentTimeMillis() - startTime), tableB.size()));
 		}
 		return tableB;
 	}
@@ -82,6 +86,7 @@ public class TrackerComponent {
 	 * @throws IOException
 	 */
 	public List<TableC> readFileTableC() throws IOException{
+		long startTime = System.currentTimeMillis();
 		File file = resourceLoader.getResource("classpath:TableC.csv").getFile();
 		List<TableC> tableC = new ArrayList<TableC>();
 		BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -98,6 +103,7 @@ public class TrackerComponent {
 			System.err.println(e.toString());
 		}finally{
 			reader.close();
+			System.out.println(String.format("'TableC.csv' file read successfully completed ! time elapsed = %d ms and number of record created = %d", (System.currentTimeMillis() - startTime), tableC.size()));
 		}
 		return tableC;
 	}
