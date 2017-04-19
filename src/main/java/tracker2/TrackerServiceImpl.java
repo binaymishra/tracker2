@@ -21,6 +21,8 @@ public class TrackerServiceImpl implements TrackerService{
 	
 	private TrackerRepository trackerRepository;
 	
+	private List<TableA> tableAList;
+	
 	@Autowired
 	public TrackerServiceImpl(final TrackerRepository trackerRepository) {
 		this.trackerRepository = trackerRepository;
@@ -31,14 +33,15 @@ public class TrackerServiceImpl implements TrackerService{
 		trackerRepository.insertTableA();
 		trackerRepository.insertTableB();
 		trackerRepository.insertTableC();
+		
+		tableAList = trackerRepository.fetchAllFromTableA();
 	}
 
 	@Override
 	public List<Map<String, Long>> findUserIpAnIntervalForTableA(long minutes) {
-		List<TableA> tableA = trackerRepository.fetchAllFromTableA();
 		
-		long startTime = tableA.get(0).getStartTime();
-		long endTime = tableA.get(tableA.size() - 1).getEndTime();
+		long startTime = tableAList.get(0).getStartTime();
+		long endTime = tableAList.get(tableAList.size() - 1).getEndTime();
 		
 		Calendar calendar = Calendar.getInstance();
 		
@@ -46,7 +49,7 @@ public class TrackerServiceImpl implements TrackerService{
 		while(startTime <= endTime){
 			startTime += minutes * 60;
 			Map<String, Long> userIpMap = new HashMap<String, Long>();
-			for(TableA a: tableA){
+			for(TableA a: tableAList){
 				if(a.getStartTime() <= startTime){
 					String key = a.getUserIp();
 					Long count = userIpMap.get(key);
@@ -62,9 +65,8 @@ public class TrackerServiceImpl implements TrackerService{
 
 	@Override
 	public void userSessionsTableA(final int startHour, final int endHour) {
-		List<TableA> tableAList = trackerRepository.fetchAllFromTableA();
 		Map<String, List<Long>> userSessionDurationsMap = new HashMap<String, List<Long>>();
-		List<TableA> tableA6to9 = new ArrayList<TableA>();
+		List<TableA> tableAs = new ArrayList<TableA>();
 		for(TableA tableA : tableAList){
 			
 			long startTime 	= tableA.getStartTime() * 1000L;
@@ -88,17 +90,10 @@ public class TrackerServiceImpl implements TrackerService{
 					Collections.sort(durations);
 					userSessionDurationsMap.put(key, durations);
 				}
-				tableA6to9.add(tableA);
+				tableAs.add(tableA);
 			}
-			
 		}
-		// 6 AM - 9 AM users.
-		System.out.println("tableA6to9 = " + tableA6to9.size()); 
-		// A map of userIp and list if duration/session(formula : endTime - startTime) stayed connected.
-		//System.out.println("morningUserSessionDurationsMap = " + morningUserSessionDurationsMap.size()); 
-		//System.out.println(morningUserSessionDurationsMap);
 		
-		//Total duration/session
 		Map<String, Long> totalDurationMap = new HashMap<String, Long>();
 		for(Map.Entry<String,List<Long>> entry: userSessionDurationsMap.entrySet()){
 			String key = entry.getKey();
@@ -113,21 +108,18 @@ public class TrackerServiceImpl implements TrackerService{
 			}
 		}
 		
-		//System.out.println("totalDurationMap.size() = "+totalDurationMap.size());
-		//System.out.println("totalDurationMap = "+totalDurationMap);
 		List<Long> temp = new ArrayList<Long>(totalDurationMap.values());
 		Collections.sort(temp);
-		//System.out.println("sortedDuration = "+temp);
 		Long lowestDuration = temp.get(0);
 		Long highestDuration = temp.get(temp.size() - 1);
-		System.out.println("********************* Highest / Lowest Duration between (6 AM - 9 AM ) = "+highestDuration +" / "+lowestDuration+" *********************");
+		System.out.println(String.format("********************* Highest / Lowest Duration between (%d  - %d ) = "+highestDuration +" / "+lowestDuration+" *********************", startHour, endHour));
 		for(Map.Entry<String, Long> entry :totalDurationMap.entrySet()){
 			String key = entry.getKey();
 			Long valLong = entry.getValue();
 			if(lowestDuration.equals(valLong)){
-				System.out.println(String.format("[%s ] userIp has lowest duration/session = %d.", key, valLong));
+				System.out.println(String.format("[%-20s ] userIp has lowest session  = %d sec", key, valLong));
 			}if(highestDuration.equals(valLong)){
-				System.out.println(String.format("[%s ] userIp has highest duration/session = %d.", key, valLong));
+				System.out.println(String.format("[%-20s ] userIp has highest session = %d sec", key, valLong));
 			}
 		}
 	}
