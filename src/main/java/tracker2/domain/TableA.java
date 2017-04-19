@@ -74,6 +74,63 @@ public class TableA {
 	public void setEndTime(Long endTime) {
 		this.endTime = endTime;
 	}
+	
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((apMac == null) ? 0 : apMac.hashCode());
+		result = prime * result + ((apName == null) ? 0 : apName.hashCode());
+		result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
+		result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
+		result = prime * result + ((userIp == null) ? 0 : userIp.hashCode());
+		result = prime * result + ((userMac == null) ? 0 : userMac.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TableA other = (TableA) obj;
+		if (apMac == null) {
+			if (other.apMac != null)
+				return false;
+		} else if (!apMac.equals(other.apMac))
+			return false;
+		if (apName == null) {
+			if (other.apName != null)
+				return false;
+		} else if (!apName.equals(other.apName))
+			return false;
+		if (endTime == null) {
+			if (other.endTime != null)
+				return false;
+		} else if (!endTime.equals(other.endTime))
+			return false;
+		if (startTime == null) {
+			if (other.startTime != null)
+				return false;
+		} else if (!startTime.equals(other.startTime))
+			return false;
+		if (userIp == null) {
+			if (other.userIp != null)
+				return false;
+		} else if (!userIp.equals(other.userIp))
+			return false;
+		if (userMac == null) {
+			if (other.userMac != null)
+				return false;
+		} else if (!userMac.equals(other.userMac))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {

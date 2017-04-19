@@ -1,17 +1,14 @@
 package tracker2;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tracker2.domain.TableA;
@@ -21,30 +18,19 @@ import tracker2.domain.TableC;
 @Service
 public class TrackerServiceImpl implements TrackerService{
 	
-	
-	private TrackerComponent trackerComponent;
-	
-	private List<TableA> tableAList;
-	
-	private List<TableB> tableBList;
-	
-	private List<TableC> tableCList;
-	
-	@Autowired
-	public TrackerServiceImpl(final TrackerComponent trackerComponent) {
-		this.trackerComponent = trackerComponent;
-	}
-	
-	@PostConstruct
-	public void init() throws IOException{
+	private Comparator<TableA> sortByStartTime = new Comparator<TableA>() {
 		
-		tableAList = trackerComponent.readFileTableA20120407();
-		tableBList = trackerComponent.readFileTableB20120409();
-		tableCList = trackerComponent.readFileTableC();
-	}
+		@Override
+		public int compare(TableA o1, TableA o2) {
+			return o1.getStartTime().compareTo(o2.getStartTime());
+		}
+	};
+	
 
 	@Override
-	public List<Map<String, Long>> findUserIpAnIntervalForTableA(long minutes) {
+	public List<Map<String, Long>> findUserIpAnIntervalForTableA(List<TableA> tableAList, long minutes) {
+		
+		Collections.sort(tableAList, sortByStartTime);
 		
 		long startTime = tableAList.get(0).getStartTime();
 		long endTime = tableAList.get(tableAList.size() - 1).getEndTime();
@@ -66,11 +52,12 @@ public class TrackerServiceImpl implements TrackerService{
 			calendar.setTimeInMillis(startTime * 1000L);
 			userIpCounts.add(userIpMap);
 		}
+		System.out.println(String.format("startTime = %d, endTime = %d. userIpCounts = %d", startTime, endTime, userIpCounts.size()));
 		return userIpCounts;
 	}
 
 	@Override
-	public void userSessionsTableA(final int startHour, final int endHour) {
+	public void userSessionsTableA(List<TableA> tableAList, final int startHour, final int endHour) {
 		Map<String, List<Long>> userSessionDurationsMap = new HashMap<String, List<Long>>();
 		List<TableA> tableAs = new ArrayList<TableA>();
 		for(TableA tableA : tableAList){
@@ -131,7 +118,7 @@ public class TrackerServiceImpl implements TrackerService{
 	}
 
 	@Override
-	public void locationTableA() {
+	public void locationTableA(List<TableA> tableAList, List<TableC> tableCList) {
 		Map<TableC, List<TableA>> mapOfTableAs = new HashMap<TableC, List<TableA>>();
 		for(TableC c: tableCList){
 			for(TableA a : tableAList){
@@ -161,7 +148,7 @@ public class TrackerServiceImpl implements TrackerService{
 	}
 
 	@Override
-	public void locationTableB() {
+	public void locationTableB(List<TableB> tableBList, List<TableC> tableCList) {
 		Map<TableC, List<TableB>> mapOfTableAs = new HashMap<TableC, List<TableB>>();
 		for(TableC c: tableCList){
 			for(TableB b : tableBList){
