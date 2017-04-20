@@ -103,16 +103,15 @@ public class TrackerServiceImpl implements TrackerService{
 		
 		List<Long> temp = new ArrayList<Long>(totalDurationMap.values());
 		Collections.sort(temp);
-		Long lowestDuration = temp.get(0);
-		Long highestDuration = temp.get(temp.size() - 1);
-		System.out.println(String.format("********************* Highest / Lowest Duration between (%d  - %d ) = "+highestDuration +" / "+lowestDuration+" *********************", startHour, endHour));
+		//Long lowestDuration = temp.get(0);
+		//Long highestDuration = temp.get(temp.size() - 1);
+		List<Long> highestFive = temp.subList(temp.size() - 6, temp.size() - 1);
+		System.out.println(String.format("********************* Highest 5 :"+highestFive.toString()+" *********************", startHour, endHour));
 		for(Map.Entry<String, Long> entry :totalDurationMap.entrySet()){
 			String key = entry.getKey();
 			Long valLong = entry.getValue();
-			if(lowestDuration.equals(valLong)){
-				System.out.println(String.format("[%-20s ] userIp has lowest session  = %d sec", key, valLong));
-			}if(highestDuration.equals(valLong)){
-				System.out.println(String.format("[%-20s ] userIp has highest session = %d sec", key, valLong));
+			if(highestFive.contains(valLong)){
+				System.out.println(String.format("[%-20s ] userIp has lowest session  = %d hours", key, valLong / (60 * 60)));
 			}
 		}
 	}
