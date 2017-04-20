@@ -106,7 +106,7 @@ public class TrackerServiceImpl implements TrackerService{
 		//Long lowestDuration = temp.get(0);
 		//Long highestDuration = temp.get(temp.size() - 1);
 		List<Long> highestFive = temp.subList(temp.size() - 6, temp.size() - 1);
-		System.out.println(String.format("********************* Highest 5 :"+highestFive.toString()+" *********************", startHour, endHour));
+		System.out.println(String.format("********************* Highest 5 :"+highestFive.toString()+" *********************(%d - %d) Hrs", startHour, endHour));
 		for(Map.Entry<String, Long> entry :totalDurationMap.entrySet()){
 			String key = entry.getKey();
 			Long valLong = entry.getValue();
